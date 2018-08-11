@@ -19,7 +19,11 @@
 					<td>{{result.filename}}</td>
 					<td>{{result.size}} bytes</td>
 					<td>{{result.type}}</td>
-					<td>{{result.checksum}}</td>
+					<td>{{result.checksum}}
+						<span class="copy">
+							<font-awesome-icon :icon="['far', 'copy']" @click="copy(result.checksum)" />
+						</span>
+					</td>
 				</tr>
 			</tbody>
 		</table>
@@ -29,6 +33,18 @@
 <style scoped>
 .generator {
 	margin-top: 1rem;
+}
+.copy {
+	color: #cccccc;
+	font-size: 0.75rem;
+	cursor: pointer;
+	float: right;
+}
+.copy:hover {
+	color: #e8eaeb;
+}
+.copy:active {
+	color: #00ffff;
 }
 .button {
 	border: 0.4rem dashed #2d2d2d;
@@ -41,8 +57,18 @@
 
 <script>
 import md5 from 'js-md5';
+import fontawesome from '@fortawesome/fontawesome';
+import FontAwesomeIcon from '@fortawesome/vue-fontawesome';
+import fabrands from '@fortawesome/fontawesome-free-brands';
+import fasolid from '@fortawesome/fontawesome-free-solid';
+import faregular from '@fortawesome/fontawesome-free-regular';
+
+fontawesome.library.add(fabrands, fasolid, faregular);
 
 export default {
+	components: {
+		FontAwesomeIcon
+	},
 	data() {
 		return {
 			bgc: "#f3f5f7",
@@ -99,7 +125,26 @@ export default {
 			e.preventDefault();
 			
 			this.calc(e.target.files);
-		}
+		},
+		copy(text) {
+			var tmp = document.createElement('div');
+
+			tmp.appendChild(document.createElement('pre')).textContent = text;
+
+			var s = tmp.style;
+			s.position = 'fixed';
+			s.left = '-100%';
+
+			document.body.appendChild(tmp);
+			document.getSelection().selectAllChildren(tmp);
+
+			var result = document.execCommand('copy');
+
+			document.body.removeChild(tmp);
+
+			// true: success, false: fail
+			return result;
+		},
 	}
 }
 </script>
