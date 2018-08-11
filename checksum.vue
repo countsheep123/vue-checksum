@@ -80,6 +80,7 @@ export default {
 			if (!files) {
 				return
 			}
+			this.results = [];
 
 			Array.from(files).forEach((file, index) => {
 				this.setResult(file, index);
